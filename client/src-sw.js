@@ -31,6 +31,14 @@ registerRoute(
   ({ request }) => ['style', 'script', 'worker'].includes(request.destination),
   new CacheFirst({
     cacheName: 'asset-cache',
-    plugins: [pageCache],
+    plugins: [
+      new CacheableResponsePlugin({
+        statuses: [0, 200],
+      }),
+      new ExpirationPlugin({
+        maxEntries: 60,
+        maxAgeSeconds: 30 * 24 * 60 * 60,
+      }),
+    ],
   })
 );
